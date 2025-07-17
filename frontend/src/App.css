@@ -1,0 +1,51 @@
+/* Toàn bộ ứng dụng */
+.app-container {
+    display: flex;
+  }
+  
+  /* Cột trái: Camera */
+  .left-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #ccc;
+    border: 4px solid #00ff00;        
+  }
+  
+  /* Cột phải: Thông tin sinh viên */
+  .right-panel {
+    padding: 30px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  /* Thông tin sinh viên */
+  .right-panel img {
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .right-panel p {
+    font-size: 16px;
+    margin: 4px 0;
+  }
+  
+  /* Nút điểm danh */
+  .right-panel button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .right-panel button:hover {
+    background-color: #0056b3;
+  }
+  
