@@ -5,7 +5,7 @@ from insightface.app import FaceAnalysis
 from datetime import datetime
 
 class Attendance:
-    def __init__(self, pkl_path="embeddings/encodings.pkl", threshold=20, log_path="attendance.csv"):
+    def __init__(self, pkl_path="embeddings/encodings.pkl", threshold=20):
         self.pkl_path = pkl_path
         self.threshold = threshold
 
@@ -37,8 +37,6 @@ class Attendance:
             embedding = face.embedding
             name = self._match_embedding(embedding)
             names.append(name)
-            self.log_attendance(name)
-
         return names
 
     def _match_embedding(self, embedding):

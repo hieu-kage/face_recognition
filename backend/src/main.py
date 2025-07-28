@@ -1,8 +1,9 @@
+
 from fastapi import FastAPI
 
-from api.route import image
+from .route import image
+from .database.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
-
 # Tạo app FastAPI
 app = FastAPI()
 app.add_middleware(
@@ -13,7 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # Khởi tạo database (tạo bảng nếu chưa có)
-
-
 # Đăng ký router sách
+init_db()
 app.include_router(image.router)
