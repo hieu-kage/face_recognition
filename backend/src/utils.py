@@ -9,7 +9,7 @@ class Attendance:
         self.pkl_path = pkl_path
         self.threshold = threshold
 
-        self.face_app = FaceAnalysis(name="buffalo_l", providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
+        self.face_app = FaceAnalysis(name="buffalo_s", providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
         self.face_app.prepare(ctx_id=0)
 
         self.known_encodings, self.known_names = self.load_data()
