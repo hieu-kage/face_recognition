@@ -1,8 +1,7 @@
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel, create_engine, Session,select
 from dotenv import load_dotenv
 from ..models import *
 import os
-
 # Load biến môi trường từ file .env
 load_dotenv()
 
@@ -27,4 +26,3 @@ def init_db():
 def get_session():
     with Session(engine) as session:
         yield session
-
