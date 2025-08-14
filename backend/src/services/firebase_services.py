@@ -21,7 +21,7 @@ if not firebase_admin._apps:
 
 def download_image_from_storage(image_path: str):
     """
-    Tải ảnh từ Firebase Storage và trả về numpy array (OpenCV image).
+    Tải ảnh từ Firebase Storage và trả về numpy array
     :param image_path: Đường dẫn trong bucket (vd: 'face_dataset/Nguyen Van A/Nguyen Van A_1.jpg')
     :return: np.ndarray hoặc None nếu lỗi
     """
