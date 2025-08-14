@@ -21,7 +21,9 @@ engine = create_engine(DATABASE_URL, echo=True)
 # Hàm tạo bảng
 def init_db():
     SQLModel.metadata.create_all(engine)
+from contextlib import contextmanager
 
+@contextmanager
 # Hàm tạo session
 def get_session():
     with Session(engine) as session:

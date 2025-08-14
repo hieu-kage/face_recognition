@@ -65,9 +65,10 @@ for person_name in tqdm(os.listdir(DATASET_DIR), desc="🔍 Quét dữ liệu kh
 
         if faces:
             embedding = faces[0].embedding
-            face_data[person_name][image_name] = embedding
+            storage_path = f"face_dataset/{person_name}/{image_name}"
+            face_data[person_name][storage_path] = embedding
             new_count += 1
-            print(f"[✅] Đã mã hoá: {person_name}/{image_name}")
+            print(storage_path)
         else:
             print(f"[⚠️] Không phát hiện mặt: {person_name}/{image_name}")
 

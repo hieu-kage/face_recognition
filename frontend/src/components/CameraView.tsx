@@ -1,57 +1,59 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 import { identifyFace } from '../api/FaceApi';
 
 interface CameraViewProps {
-  onMatch: (student: any) => void; // Replace 'any' with your student type
+  onMatch: (student: any) => void; // Callback báo cho cha khi match
 }
-interface Student {
-  id: string;
-  name: string;
-  studentId: string;
-  class?: string;
-  // Add other student properties as needed
-}
+
 const videoConstraints = {
   width: 500,
   height: 300,
-  facingMode: "user"
+  facingMode: 'user',
 };
 
 export default function CameraView({ onMatch }: CameraViewProps) {
   const webcamRef = useRef<Webcam>(null);
+  const isProcessing = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [matchedStudent, setMatchedStudent] = useState<Student | null>(null);
 
-  const capture = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      setMatchedStudent(null);
-      
-      const imageSrc = webcamRef.current?.getScreenshot();
+  useEffect(() => {
+    const detect = async () => {
+      if (!webcamRef.current || isProcessing.current) return;
+
+      const imageSrc = webcamRef.current.getScreenshot();
       if (!imageSrc) {
-        throw new Error('Failed to capture image');
+        setError('Không thể lấy ảnh từ camera');
+        return;
       }
 
-      const student = await identifyFace(imageSrc);
-      if (student) {
-        setMatchedStudent(student);
-        onMatch(student);
-      } else {
-        setError('No face detected');
+      try {
+        isProcessing.current = true;
+        setIsLoading(true);
+        setError(null);
+
+        const student = await identifyFace(imageSrc);
+
+        if (student) {
+          onMatch(student); // Báo cho cha
+        } else {
+          setError('Không phát hiện khuôn mặt');
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Lỗi không xác định');
+      } finally {
+        isProcessing.current = false;
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [webcamRef, onMatch]);
+    };
+
+    const intervalId = setInterval(detect, 5000); // 5s gọi 1 lần
+    return () => clearInterval(intervalId);
+  }, [onMatch]);
 
   return (
-    <div className="camera-box" style={{ display: 'flex', flexDirection: 'column', alignContent: 'center' }}> 
-      <h3>Camera điểm danh</h3>
+    <div>
       <Webcam
         audio={false}
         height={300}
@@ -60,21 +62,8 @@ export default function CameraView({ onMatch }: CameraViewProps) {
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       />
-      <button onClick={capture} disabled={isLoading}>
-        {isLoading ? 'Đang xử lý...' : 'Điểm danh'}
-      </button>
+      {isLoading && <p>Đang xử lý...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      {matchedStudent && (
-        <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
-          <h4>Thông tin sinh viên:</h4>
-          <p><strong>Họ tên:</strong> {matchedStudent.name}</p>
-          <p><strong>MSSV:</strong> {matchedStudent.studentId}</p>
-          {matchedStudent.class && (
-            <p><strong>Lớp:</strong> {matchedStudent.class}</p>
-          )}
-        </div>
-      )}
     </div>
   );
 }

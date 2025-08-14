@@ -2,16 +2,16 @@ export async function identifyFace(imageBase64) {
   const res = await fetch('http://localhost:8000/image/predict', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ image_base64: imageBase64 }) // ✅ đúng key
+    body: JSON.stringify({ image_base64: imageBase64 }) 
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("❌ API trả về lỗi:", errorText);
+  const data = await res.json(); // chỉ đọc một lần
+
+  if (data.status === 'success') {
+    console.log("✅ Kết quả trả về từ backend:", data);
+    return data;
+  } else {
+    console.error("❌ API trả về lỗi:", data); // dùng luôn data
     return null;
   }
-
-  const data = await res.json();
-  console.log("✅ Kết quả trả về từ backend:", data);  // ✅ In ra toàn bộ response
-  return data.first_person || null;
 }

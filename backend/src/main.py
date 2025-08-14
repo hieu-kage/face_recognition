@@ -1,6 +1,8 @@
 
 from fastapi import FastAPI
+import os
 
+print("👉 Current working directory:", os.getcwd())
 from .route import image
 from .database.database import init_db
 from fastapi.middleware.cors import CORSMiddleware
